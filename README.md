@@ -31,3 +31,5 @@ http://localhost:3000/api/addartikel
 http://localhost:3000/api/updateartikel
 http://localhost:3000/api/deleteartikel
 ```
+
+Dibuat oleh @kanglerian tanggal 30 Juni 2022
