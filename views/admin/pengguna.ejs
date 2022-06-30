@@ -1,0 +1,115 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+ <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <button type="button" data-toggle="modal" data-target="#tambahData" class="btn btn-primary btn-sm">Tambah
+        data</button>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% let no=1;%>
+              <% data.forEach(pengguna=> { %>
+                <tr>
+                  <td>
+                    <%= no++ %>
+                  </td>
+                  <td>
+                    <%= pengguna.username %>
+                  </td>
+                  <td>
+                    <%= pengguna.password %>
+                  </td>
+                  <td>
+                    <button type="button" data-toggle="modal" data-target="#editData<%= pengguna.id %>"
+                      class="badge badge-warning border-0">edit</button>
+
+                    <div class="modal fade" id="editData<%= pengguna.id %>" tabindex="-1" aria-labelledby="exampleModalLabel"
+                      aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <form method="POST" action="/api/updatepengguna">
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <input type="hidden" name="id" value="<%= pengguna.id %>">
+                                <label>Username</label>
+                                <input type="text" class="form-control" name="username"
+                                  value="<%= pengguna.username %>">
+                              </div>
+                              <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" class="form-control"
+                                  value="<%= pengguna.password %>">
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                              <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form action="/api/deletepengguna" method="POST" class="d-inline">
+                      <input type="hidden" name="id" value="<%= pengguna.id %>">
+                      <button type="submit" class="badge badge-danger border-0">hapus</button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<!-- Modal -->
+<div class="modal fade" id="tambahData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Tambah data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="/api/addpengguna">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" name="username" placeholder="Tulis username kamu disini...">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Tulis password kamu disini...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
