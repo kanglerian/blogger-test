@@ -6,8 +6,8 @@ const Auth = {
       next();
   },
   checkStatus: (req, res, next) => {
-      if(!req.session.status){
-          return res.redirect('/');
+      if(!req.session.status == 0){
+          return res.redirect('back');
       }
       next();
   }

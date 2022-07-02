@@ -4,7 +4,7 @@ export const getAllArtikel = async(req, res) => {
   try {
     const artikel = await Model.Artikel.findAll({
       include: [
-        {model: Model.Pengguna, attributes: ['id','username']}
+        {model: Model.Pengguna, attributes: ['nik','username']}
       ],
     });
     res.json(artikel);
@@ -22,7 +22,7 @@ export const getArtikel = async(req, res) => {
         id: req.params.id
       },
       include: [
-        {model: Model.Pengguna, attributes: ['id','username']}
+        {model: Model.Pengguna, attributes: ['nik','username']}
       ],
     });
     res.json(artikel);

@@ -3,7 +3,7 @@ import axios from 'axios';
 import expressLayouts from 'express-ejs-layouts';
 import methodOverride from 'method-override';
 import cors from 'cors';
-import { addPengguna, deletePengguna, getAllPengguna, getPengguna, updatePengguna } from './controllers/Pengguna.js';
+import { addPengguna, deletePengguna, getAllPengguna, getLogin, getPengguna, updatePengguna } from './controllers/Pengguna.js';
 import { getAllArtikel, getArtikel, addArtikel, updateArtikel, deleteArtikel } from './controllers/Artikel.js';
 
 const app = express();
@@ -35,15 +35,23 @@ app.post('/login', async (req, res) => {
   if (req.body.username == "" || req.body.password == "") {
     res.redirect('/login');
   } else {
-    await axios.get('http://localhost:3000/api/pengguna/')
+    const username = req.body.username;
+    await axios({
+      method: 'post',
+      url: 'http://localhost:3000/api/login',
+      data: {
+        username: username
+      }
+    })
       .then((response) => {
-        if (response.data.length > 0) {
-          session_store.username = response.data[0].username;
+        if(response.data === null){
+          return res.redirect('/login');
+        }
+          session_store.nik = response.data.nik;
+          session_store.username = response.data.username;
+          session_store.status = response.data.status;
           session_store.logged_in = true;
           res.redirect('/admin/artikel');
-        } else {
-          res.redirect('/login');
-        }
       });
   }
 });
@@ -64,7 +72,7 @@ app.get('/signup', async (req, res) => {
   });
 });
 
-app.get('/admin/pengguna', auth.checkLogin, async (req, res) => {
+app.get('/admin/pengguna', auth.checkLogin, auth.checkStatus, async (req, res) => {
   const session_store = req.session;
   await axios.get('http://localhost:3000/api/pengguna/')
     .then((response) => {
@@ -110,12 +118,14 @@ app.get('/admin/artikel/:id', auth.checkLogin, async (req, res) => {
 });
 
 app.get('/', async (req, res) => {
+  const session_store = req.session;
   await axios.get('http://localhost:3000/api/artikel/')
     .then((response) => {
       res.render('client/index', {
         layout: 'layouts/blog',
         data: response.data,
         url: req.originalUrl,
+        user: session_store
       });
     }).catch((error) => {
       res.send(error);
@@ -123,17 +133,21 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/artikel/:id', async (req, res) => {
+  const session_store = req.session;
   await axios.get(`http://localhost:3000/api/artikel/${req.params.id}`)
     .then((response) => {
       res.render('client/post', {
         layout: 'layouts/blog',
         data: response.data,
         url: req.originalUrl,
+        user: session_store,
       });
     }).catch((error) => {
       res.send(error);
     });
 });
+
+app.use('/api/login', getLogin);
 
 app.use('/api/pengguna/:id', getPengguna);
 app.use('/api/pengguna', getAllPengguna);

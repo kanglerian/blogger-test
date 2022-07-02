@@ -1,7 +1,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
- <!-- DataTales Example -->
+  <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
       <button type="button" data-toggle="modal" data-target="#tambahData" class="btn btn-primary btn-sm">Tambah
@@ -13,8 +13,10 @@
           <thead>
             <tr>
               <th>No</th>
+              <th>NIK</th>
               <th>Username</th>
               <th>Password</th>
+              <th>Status</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -26,17 +28,23 @@
                     <%= no++ %>
                   </td>
                   <td>
+                    <%= pengguna.nik %>
+                  </td>
+                  <td>
                     <%= pengguna.username %>
                   </td>
                   <td>
                     <%= pengguna.password %>
                   </td>
                   <td>
-                    <button type="button" data-toggle="modal" data-target="#editData<%= pengguna.id %>"
+                    <%= pengguna.status == 0 ? 'Administrator' : 'Pengguna' %>
+                  </td>
+                  <td>
+                    <button type="button" data-toggle="modal" data-target="#editData<%= pengguna.nik %>"
                       class="badge badge-warning border-0">edit</button>
 
-                    <div class="modal fade" id="editData<%= pengguna.id %>" tabindex="-1" aria-labelledby="exampleModalLabel"
-                      aria-hidden="true">
+                    <div class="modal fade" id="editData<%= pengguna.nik %>" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -48,7 +56,7 @@
                           <form method="POST" action="/api/updatepengguna">
                             <div class="modal-body">
                               <div class="form-group">
-                                <input type="hidden" name="id" value="<%= pengguna.id %>">
+                                <input type="hidden" name="nik" value="<%= pengguna.nik %>">
                                 <label>Username</label>
                                 <input type="text" class="form-control" name="username"
                                   value="<%= pengguna.username %>">
@@ -57,6 +65,14 @@
                                 <label>Password</label>
                                 <input type="password" name="password" class="form-control"
                                   value="<%= pengguna.password %>">
+                              </div>
+                              <div class="form-group">
+                                <label>Status</label>
+                                <select name="status" class="form-control">
+                                  <option value="<%= pengguna.status %>"><%= pengguna.status == 0 ? 'Administrator' : 'Pengguna' %></option>
+                                  <option value="0">Administrator</option>
+                                  <option value="1">Pengguna</option>
+                                </select>
                               </div>
                             </div>
                             <div class="modal-footer">
@@ -69,7 +85,7 @@
                     </div>
 
                     <form action="/api/deletepengguna" method="POST" class="d-inline">
-                      <input type="hidden" name="id" value="<%= pengguna.id %>">
+                      <input type="hidden" name="nik" value="<%= pengguna.nik %>">
                       <button type="submit" class="badge badge-danger border-0">hapus</button>
                     </form>
                   </td>
@@ -97,12 +113,24 @@
       <form method="POST" action="/api/addpengguna">
         <div class="modal-body">
           <div class="form-group">
+            <label>NIK</label>
+            <input type="text" class="form-control" name="nik" placeholder="Tulis NIK disini...">
+          </div>
+          <div class="form-group">
             <label>Username</label>
             <input type="text" class="form-control" name="username" placeholder="Tulis username kamu disini...">
           </div>
           <div class="form-group">
             <label>Password</label>
             <input type="password" name="password" class="form-control" placeholder="Tulis password kamu disini...">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+              <option selected>Pilih</option>
+              <option value="0">Administrator</option>
+              <option value="1">Pengguna</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">
