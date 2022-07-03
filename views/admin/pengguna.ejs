@@ -37,7 +37,7 @@
                     <%= pengguna.password %>
                   </td>
                   <td>
-                    <%= pengguna.status == 0 ? 'Administrator' : 'Pengguna' %>
+                    <%= pengguna.status==0 ? 'Administrator' : 'Pengguna' %>
                   </td>
                   <td>
                     <button type="button" data-toggle="modal" data-target="#editData<%= pengguna.nik %>"
@@ -69,7 +69,9 @@
                               <div class="form-group">
                                 <label>Status</label>
                                 <select name="status" class="form-control">
-                                  <option value="<%= pengguna.status %>"><%= pengguna.status == 0 ? 'Administrator' : 'Pengguna' %></option>
+                                  <option value="<%= pengguna.status %>">
+                                    <%= pengguna.status==0 ? 'Administrator' : 'Pengguna' %>
+                                  </option>
                                   <option value="0">Administrator</option>
                                   <option value="1">Pengguna</option>
                                 </select>
@@ -84,10 +86,11 @@
                       </div>
                     </div>
 
-                    <form action="/api/deletepengguna" method="POST" class="d-inline">
+                    <form action="/api/deletepengguna" id="penggunaHapus" method="POST" class="d-inline">
                       <input type="hidden" name="nik" value="<%= pengguna.nik %>">
-                      <button type="submit" class="badge badge-danger border-0">hapus</button>
                     </form>
+
+                    <button type="button" onclick="hapus('<%= pengguna.nik %>')" class="badge badge-danger border-0">hapus</button>
                   </td>
                 </tr>
                 <% }) %>
@@ -141,3 +144,27 @@
     </div>
   </div>
 </div>
+
+<script>
+  const hapus = (data) => {
+    swal({
+      title: `Apakah yakin?`,
+      text: 'Jika akun ini dihapus, maka artikel dari pengguna ini akan ikut terhapus.',
+      icon: "warning",
+      buttons: ["Batal", "Lanjutkan!"],
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          document.getElementById("penggunaHapus").submit();
+          swal("Pengguna telah dihapus!", {
+            icon: "success"
+          });
+        } else {
+          swal("Pengguna tidak jadi dihapus.", {
+            button: "Tutup"
+          });
+        }
+      });
+  }
+</script>

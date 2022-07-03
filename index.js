@@ -12,9 +12,11 @@ const port = 3000;
 import auth from './middlewares/auth.js';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import flash from 'connect-flash';
 
-app.use(cookieParser());
-app.use(session({ secret: 'blogger' }));
+app.use(cookieParser('secret'));
+app.use(session({ secret: 'secret' }));
+app.use(flash());
 
 app.set('view engine', 'ejs');
 app.use(cors());
@@ -80,7 +82,7 @@ app.get('/admin/pengguna', auth.checkLogin, auth.checkStatus, async (req, res) =
         layout: 'layouts/dashboard',
         data: response.data,
         url: req.originalUrl,
-        user: session_store,
+        user: session_store
       });
     }).catch((error) => {
       res.send(error);
